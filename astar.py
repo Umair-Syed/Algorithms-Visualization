@@ -40,17 +40,17 @@ class Node:
         return self.color == GREEN
 
     def isBarrier(self):
-        return self.color = BLACK
+        return self.color == BLACK
     
     def isSource(self):
-        return self.color = ORANGE
+        return self.color == ORANGE
     
     def isDestination(self):
         return self.color == TURQUOISE
 
 
     def resetNode(self):
-        return self.color = WHITE
+        self.color = WHITE
 
     def setVisited(self):
         self.color = RED
