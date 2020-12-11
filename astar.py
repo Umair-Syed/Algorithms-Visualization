@@ -52,6 +52,9 @@ class Node:
     def reset_node(self):
         self.color = WHITE
 
+    def set_source(self):
+        self.color = ORANGE
+
     def set_visited(self):
         self.color = RED
     
@@ -86,11 +89,12 @@ def h(p1, p2):
     return abs(x2 - x1) + abs(y2 - y1)
 
 
-# will return 2d list of Nodes
+# param: rows_count = no of rows, width = width in pixels. Example (50, 800)
+# returns 2d list of Nodes
 def make_grid(rows_count, width):
     grid = []
 
-    # gap is width/height of one box(node)
+    # gap is width or height of one box(node)
     gap = width // rows_count  
     for i in range(rows_count):
         grid.append([])
@@ -101,16 +105,16 @@ def make_grid(rows_count, width):
     return grid
 
 
-# will draw grid boundries
+# draws grid boundries
 def draw_grid(win, rows, width):
     gap = width // rows
 
     for i in range(rows):
-        # drawing horizontal line (0, i*gap) is the start point and (width, i*gap) is the end point
+        # drawing horizontal line. (0, i*gap) is the start point and (width, i*gap) is the end point
         pygame.draw.line(win, GREY, (0, i * gap), (width, i * gap))
 
     for j in range(rows):
-        # drawing vertical line (j*gap, 0) is the start point and (j*gap, width) is the end point
+        # drawing vertical line. (j*gap, 0) is the start point and (j*gap, width) is the end point
         pygame.draw.line(win, GREY, (j * gap, 0), (j * gap, width))
 
 
@@ -129,4 +133,55 @@ def draw(win, grid, rows, width):
 
     # updates display
     pygame.display.update() 
+
+
+# param: pos = x y coordinates
+# return: row and col of node clicked on 
+def get_clicked_pos(pos, rows, width):
+	gap = width // rows
+	y, x = pos
+
+	row = y // gap
+	col = x // gap
+
+	return row, col
+
+
+def main(win, width):
+    ROWS = 50
+    grid = make_grid(ROWS, width)
+
+    start = None
+    end = None
+
+    QUIT = pygame.QUIT
+
+    run = True
+    started = False  # algo started
+    while run:
+        draw(win, grid, ROWS, width)
+        for event in pygame.event.get(): # contains all events
+            if event.type == QUIT:
+                run = False
+            if started:
+                continue
+            if pygame.mouse.get_pressed()[0]: # Left click
+                pos = pygame.mouse.get_pos() 
+                row, col = get_clicked_pos(pos, ROWS, width)
+                node = grid[row][col] 
+                if not start:
+                    start = node
+                    start.set_source()
+                elif not end:
+                    end = node
+                    end.set_destination()
+                elif node != end and node != start:
+                    node.set_barrier()
+
+            elif pygame.mouse.get_pressed()[2]: # Right click
+                pass
+    pygame.quit()
+
+main(WIN, WIDTH)
+
 
