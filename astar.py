@@ -3,7 +3,7 @@ import math
 from queue import PriorityQueue
 
 # setting up window
-WIDTH = 800
+WIDTH = 600
 WIN = pygame.display.set_mode((WIDTH, WIDTH)) 
 pygame.display.set_caption("A* Shortest Path Algorithm")
 
@@ -75,7 +75,18 @@ class Node:
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
     def update_neighbors(self, grid):
-        pass
+        self.neighbors = []
+		if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # DOWN
+			self.neighbors.append(grid[self.row + 1][self.col])
+
+		if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # UP
+			self.neighbors.append(grid[self.row - 1][self.col])
+
+		if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # RIGHT
+			self.neighbors.append(grid[self.row][self.col + 1])
+
+		if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # LEFT
+			self.neighbors.append(grid[self.row][self.col - 1])
 
     # less than  (this < other) 
     def __lt__(self, other): 
@@ -87,6 +98,10 @@ def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
     return abs(x2 - x1) + abs(y2 - y1)
+
+
+def algorithm(draw, grid, source, destination):
+    pass
 
 
 # param: rows_count = no of rows, width = width in pixels. Example (50, 800)
@@ -151,17 +166,15 @@ def main(win, width):
     ROWS = 50
     grid = make_grid(ROWS, width)
 
-    start = None
-    end = None
-
-    QUIT = pygame.QUIT
+    source = None
+    destination = None
 
     run = True
     started = False  # algo started
     while run:
         draw(win, grid, ROWS, width)
         for event in pygame.event.get(): # contains all events
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 run = False
             if started:
                 continue
@@ -169,17 +182,33 @@ def main(win, width):
                 pos = pygame.mouse.get_pos() 
                 row, col = get_clicked_pos(pos, ROWS, width)
                 node = grid[row][col] 
-                if not start:
-                    start = node
-                    start.set_source()
-                elif not end:
-                    end = node
-                    end.set_destination()
-                elif node != end and node != start:
+                if not source and node != destination:
+                    source = node
+                    source.set_source()
+                elif not destination and node != source:
+                    destination = node
+                    destination.set_destination()
+                elif node != destination and node != source:
                     node.set_barrier()
 
             elif pygame.mouse.get_pressed()[2]: # Right click
-                pass
+                pos = pygame.mouse.get_pos() 
+                row, col = get_clicked_pos(pos, ROWS, width)
+                node = grid[row][col] 
+                node.reset_node()
+                if node == source:
+                    source = None
+                elif node == destination:
+                    destination = None
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and not started:
+                    for row in grid:
+                        for node in row:
+                            node.update_neighbors()
+
+                    algorithm(lambda: draw(win, grid, ROWS, width), grid, source, destination)
+
     pygame.quit()
 
 main(WIN, WIDTH)
