@@ -48,7 +48,6 @@ class Node:
     def is_destination(self):
         return self.color == TURQUOISE
 
-
     def reset_node(self):
         self.color = WHITE
 
@@ -70,23 +69,20 @@ class Node:
     def set_path(self):
         self.color = PURPLE
 
-    
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
     def update_neighbors(self, grid):
         self.neighbors = []
-		if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # DOWN
-			self.neighbors.append(grid[self.row + 1][self.col])
 
-		if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # UP
-			self.neighbors.append(grid[self.row - 1][self.col])
-
-		if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # RIGHT
-			self.neighbors.append(grid[self.row][self.col + 1])
-
-		if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # LEFT
-			self.neighbors.append(grid[self.row][self.col - 1])
+        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # DOWN
+            self.neighbors.append(grid[self.row + 1][self.col])
+        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # UP
+            self.neighbors.append(grid[self.row - 1][self.col])
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # RIGHT
+            self.neighbors.append(grid[self.row][self.col + 1])
+        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # LEFT
+            self.neighbors.append(grid[self.row][self.col - 1])
 
     # less than  (this < other) 
     def __lt__(self, other): 
@@ -100,8 +96,58 @@ def h(p1, p2):
     return abs(x2 - x1) + abs(y2 - y1)
 
 
+# Backtracking 
+def reconstruct_path(came_from, current, draw):
+    while current in came_from:
+        current = came_from[current]
+        current.set_path()
+        draw()
+
+
+# draw is draw funtion, grid is 2d list of nodes
 def algorithm(draw, grid, source, destination):
-    pass
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, source)) # put source node in PQ. Priority a/c to f_score([0]), otherwise count [1] (ie which inserted first?)
+    came_from = {}  # for backtracking
+    g_score = {node: float("inf") for row in grid for node in row} # current shortest distance from source to this node
+    g_score[source] = 0
+    f_score = {node: float("inf") for row in grid for node in row}
+    f_score[source] = h(source.get_position(), destination.get_position())
+
+    open_set_hash = {source} # keeps track whats in open_set
+
+    while not open_set.empty():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        
+        current = open_set.get()[2] # get node from priority queue (min f_score)
+        open_set_hash.remove(current)
+
+        if current == destination: # path FOUND!
+            reconstruct_path(came_from, destination, draw)
+            destination.set_destination()
+            return True
+            
+        for neighbor in current.neighbors:
+            temp_g_score = g_score[current] + 1
+            if temp_g_score < g_score[neighbor]:
+                came_from[neighbor] = current
+                g_score[neighbor] = temp_g_score
+                f_score[neighbor] = temp_g_score + h(neighbor.get_position(), destination.get_position())
+                if neighbor not in open_set_hash:
+                    count += 1
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.set_current()
+
+        draw()
+
+        if current != destination:
+            current.set_visited()
+        
+    return False
 
 
 # param: rows_count = no of rows, width = width in pixels. Example (50, 800)
@@ -170,14 +216,12 @@ def main(win, width):
     destination = None
 
     run = True
-    started = False  # algo started
     while run:
         draw(win, grid, ROWS, width)
         for event in pygame.event.get(): # contains all events
             if event.type == pygame.QUIT:
                 run = False
-            if started:
-                continue
+           
             if pygame.mouse.get_pressed()[0]: # Left click
                 pos = pygame.mouse.get_pos() 
                 row, col = get_clicked_pos(pos, ROWS, width)
@@ -202,12 +246,17 @@ def main(win, width):
                     destination = None
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and not started:
+                if event.key == pygame.K_SPACE and source and destination: # start
                     for row in grid:
                         for node in row:
-                            node.update_neighbors()
+                            node.update_neighbors(grid)
 
                     algorithm(lambda: draw(win, grid, ROWS, width), grid, source, destination)
+
+                if event.key == pygame.K_BACKSPACE: # reset 
+                    source = None
+                    destination = None
+                    grid = make_grid(ROWS, width)
 
     pygame.quit()
 
