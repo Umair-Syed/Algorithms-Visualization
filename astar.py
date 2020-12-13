@@ -1,5 +1,5 @@
+# A* Shortest Path Algorithm Visualization
 import pygame
-import math
 from queue import PriorityQueue
 
 # setting up window
