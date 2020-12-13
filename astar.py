@@ -1,21 +1,10 @@
 # A* Shortest Path Algorithm Visualization
-import pygame
+import sys
+from utils import *
 from queue import PriorityQueue
 
-# setting up window
+# Setup Window
 pygame.display.set_caption("A* Shortest Path Algorithm")
-
-# colors tuples
-RED = (255, 0, 0)  # Visited
-GREEN = (0, 255, 0)
-BLUE = (0, 255, 0)  # Destination
-YELLOW = (255, 255, 0)
-WHITE = (255, 255, 255)  # Not visited
-BLACK = (0, 0, 0)  # Barrier
-PURPLE = (128, 0, 128)  # Path
-ORANGE = (255, 165, 0)  # Source
-GREY = (128, 128, 128)  # Grid boundry
-TURQUOISE = (64, 224, 208)
 
 
 class Node:
@@ -108,8 +97,9 @@ def reconstruct_path(came_from, current, draw):
 def algorithm(draw, grid, source, destination):
     count = 0
     open_set = PriorityQueue()
-    open_set.put((0, count,
-                  source))  # put source node in PQ. Priority a/c to f_score([0]), otherwise count [1] (ie which inserted first?)
+    # put source node in PQ. Priority a/c to f_score([0]), otherwise count [1] (ie which
+    open_set.put((0, count, source))
+    # inserted first?)
     came_from = {}  # for backtracking
     g_score = {node: float("inf") for row in grid for node in row}  # current shortest distance from source to this node
     g_score[source] = 0
@@ -221,9 +211,10 @@ def run_visualization(win, width):
         draw(win, grid, rows, width)
         for event in pygame.event.get():  # contains all events
             if event.type == pygame.QUIT:
-                run = False
+                pygame.quit()
+                sys.exit()
 
-            if pygame.mouse.get_pressed()[0]:  # Left click
+            if pygame.mouse.get_pressed(3)[0]:  # Left click
                 pos = pygame.mouse.get_pos()
                 row, col = get_clicked_pos(pos, rows, width)
                 node = grid[row][col]
@@ -254,10 +245,13 @@ def run_visualization(win, width):
 
                     algorithm(lambda: draw(win, grid, rows, width), grid, source, destination)
 
-                if event.key == pygame.K_BACKSPACE:  # reset
+                if event.key == pygame.K_c:  # reset
                     source = None
                     destination = None
                     grid = make_grid(rows, width)
 
-    pygame.quit()
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+
+
 
