@@ -76,9 +76,8 @@ class Node:
     def __lt__(self, other):
         return False
 
-    # Heuristics function (using Manhattan Distance)
 
-
+# Heuristics function (using Manhattan Distance)
 def h(p1, p2):
     x1, y1 = p1
     x2, y2 = p2
@@ -252,6 +251,3 @@ def run_visualization(win, width):
 
                 if event.key == pygame.K_ESCAPE:
                     run = False
-
-
-
