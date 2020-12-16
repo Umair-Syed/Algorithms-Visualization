@@ -10,5 +10,8 @@ Visualizing different algorithms using Pygame.
 </ol>
 
 <h3>Screen Shots</h3>
+<img src="/screenshots/sc1.jpg" height="100%" width="100%" >
+<img src="/Screenshots/gif1.gif" height="100%" width="100%" >
+
 
 
