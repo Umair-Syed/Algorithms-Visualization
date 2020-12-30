@@ -2,6 +2,7 @@
 Visualizing different algorithms using Pygame.
 
 
+
 <h3>Features:</h3>
 <ol>
   <li>Main Menu for user friendly interaction.</li>
@@ -14,4 +15,4 @@ Visualizing different algorithms using Pygame.
 <img src="/screenshots/gif1.gif" height="60%" width="60%" >
 
 
-
+Thanks to <b>TWM</b> tutorials on pygame. Really helped me to get started.
