@@ -1,11 +1,10 @@
-# A* Shortest Path Algorithm Visualization
+# Breadth First Search Algorithm Visualization
 import sys
 from utils import *
-from queue import PriorityQueue
 from pygame import time
 
 # Setup Window
-pygame.display.set_caption("A* Shortest Path Algorithm")
+pygame.display.set_caption("BFS Algorithm")
 
 
 class Node:
@@ -78,13 +77,6 @@ class Node:
         return False
 
 
-# Heuristics function (using Manhattan Distance)
-def h(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    return abs(x2 - x1) + abs(y2 - y1)
-
-
 # Backtracking 
 def reconstruct_path(came_from, current, draw):
     while current in came_from:
@@ -96,24 +88,21 @@ def reconstruct_path(came_from, current, draw):
 # draw is draw funtion, grid is 2d list of nodes
 def algorithm(draw, grid, source, destination):
     count = 0
-    open_set = PriorityQueue()
-    # put source node in PQ. Priority a/c to f_score([0]), otherwise count [1] (ie which
-    open_set.put((0, count, source))
-    # inserted first?)
-    came_from = {}  # for backtracking
-    g_score = {node: float("inf") for row in grid for node in row}  # current shortest distance from source to this node
-    g_score[source] = 0
-    f_score = {node: float("inf") for row in grid for node in row}
-    f_score[source] = h(source.get_position(), destination.get_position())
+    open_set = []
+    # put source node in queue
+    open_set.append(source)
+    # came_from dictionary for backtracking
+    came_from = {}
+    open_set_hash = {source}  # keeps track of what's in the open set
 
-    open_set_hash = {source}  # keeps track whats in open_set
-
-    while not open_set.empty():
+    while not len(open_set) == 0:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        current = open_set.get()[2]  # get node from priority queue (min f_score)
+        # current = open_set.get()
+        # open_set_hash.remove(current)
+        current = open_set.pop(0)
         open_set_hash.remove(current)
 
         if current == destination:  # path FOUND!
@@ -122,17 +111,15 @@ def algorithm(draw, grid, source, destination):
             return True
 
         for neighbor in current.neighbors:
-            temp_g_score = g_score[current] + 1
-            if temp_g_score < g_score[neighbor]:
+            if not neighbor.is_visited():        
                 came_from[neighbor] = current
-                g_score[neighbor] = temp_g_score
-                f_score[neighbor] = temp_g_score + h(neighbor.get_position(), destination.get_position())
                 if neighbor not in open_set_hash:
-                    count += 1
-                    open_set.put((f_score[neighbor], count, neighbor))
-                    open_set_hash.add(neighbor)
-                    neighbor.set_current()
-
+                        count += 1
+                        open_set.append(neighbor)
+                        open_set_hash.add(neighbor)
+                        neighbor.set_current()
+                
+    
         draw()
 
         if current != destination:
@@ -244,7 +231,7 @@ def run_visualization(win, width):
                     for row in grid:
                         for node in row:
                             node.update_neighbors(grid)
-                    msg = 'A* Algorithm running...'
+                    msg = 'BFS Algorithm running...'
                     found = algorithm(lambda: draw(win, grid, rows, width, msg), grid, source, destination)
                     print("ALgorithm Finished")
                     if found:
