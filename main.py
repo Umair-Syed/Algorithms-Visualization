@@ -2,6 +2,7 @@ import astar
 import bfs
 import insertion_sort
 import sys
+import bubble_sort
 from utils import *  # imports pygame
 from pygame.locals import *
 
@@ -34,11 +35,12 @@ def run_main():
         bfs_btn = normal_button((125, 230), (100, 30), _screen, 'BFS', mouse_pos)
         insertion_btn = normal_button((325, 180), (120, 30), _screen, 'Insertion Sort', mouse_pos)
         bubble_btn = normal_button((325, 230), (120, 30), _screen, 'Bubble Sort', mouse_pos)
-        help_btn = normal_button((SCREEN_WIDTH - 120, SCREEN_WIDTH - 30), (100, 30), _screen, 'Help', mouse_pos, color=BLUE)
+        #help_btn = normal_button((SCREEN_WIDTH - 120, SCREEN_WIDTH - 30), (100, 30), _screen, 'Help', mouse_pos, color=BLUE)
         if _click:
             set_click_listener(a_star_btn, mouse_pos, lambda: astar.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(bfs_btn, mouse_pos, lambda: bfs.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(insertion_btn, mouse_pos, lambda: insertion_sort.run_visualization(_screen, SCREEN_WIDTH))
+            set_click_listener(bubble_btn, mouse_pos, lambda: bubble_sort.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(git_hub, mouse_pos, lambda: webbrowser.open('https://github.com/Umair-Syed/Algorithms'
                                                                            '-Visualization.git', new=2))
             
