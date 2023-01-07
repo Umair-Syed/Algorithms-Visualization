@@ -1,12 +1,13 @@
 import astar
 import bfs
+import insertion_sort
 import sys
 from utils import *  # imports pygame
 from pygame.locals import *
 
 # Setup window
 SCREEN_WIDTH = 550
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 630
 pygame.display.set_caption("Algorithms Visualization")
 
 _screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -37,10 +38,13 @@ def run_main():
         if _click:
             set_click_listener(a_star_btn, mouse_pos, lambda: astar.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(bfs_btn, mouse_pos, lambda: bfs.run_visualization(_screen, SCREEN_WIDTH))
+            set_click_listener(insertion_btn, mouse_pos, lambda: insertion_sort.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(git_hub, mouse_pos, lambda: webbrowser.open('https://github.com/Umair-Syed/Algorithms'
                                                                            '-Visualization.git', new=2))
+            
 
         _click = False
+        # _click = is_clicked()
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -52,6 +56,7 @@ def run_main():
             if event.type == MOUSEBUTTONDOWN:
                 if event.button == 1:
                     _click = True
+    
 
         pygame.display.update()
 
