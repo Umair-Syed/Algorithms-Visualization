@@ -30,7 +30,13 @@ class Node:
         self.color = WHITE
 
     def set_cell(self):
+        self.color = ORANGE
+    
+    def set_cell_process(self):
         self.color = RED
+
+    def set_cell_under(self):
+        self.color = GREEN
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
@@ -40,13 +46,36 @@ class Node:
 def algorithm(draw,grid, make_bars,rows):
     for i in range(len(list)):
         for j in range(0,len(list)-i-1):
+            make_bars_dur(grid,rows,j,1)
+            draw()
+            time.wait(150)
+            make_bars_dur(grid,rows,j+1,0)
+            draw()
+            time.wait(150)
             if list[j]>list[j+1]:
                 list[j],list[j+1] = list[j+1],list[j]
             make_bars(grid,rows)
             draw()
-            time.wait(300)
+            time.wait(150)
         
         
+def make_bars_dur(grid,rows,i,fl):
+    c=0
+    left=1
+    while c<=i:
+        left=left+2
+        c=c+1
+    j=rows-1
+    while j>=rows-list[i] and left>2:
+        if(fl==1):
+            grid[left][j].set_cell_process()
+            j=j-1
+        else:
+            grid[left][j].set_cell_under()
+            j=j-1
+    while j>0:
+        grid[left][j].reset_node()
+        j=j-1
 
 def make_bars(grid,rows):
     left=1

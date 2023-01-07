@@ -20,9 +20,9 @@ def run_main():
     while True:
         _screen.fill(DARK_SLATE_GRAY)
 
-        draw_text('Algorithms Visualization', pygame.font.SysFont('Lato', 32, True),
+        draw_text('Algorithms Visualization', pygame.font.SysFont('Lato', 40, True),
                   ORANGE_RED, _screen, SCREEN_WIDTH // 2, 50)
-        draw_text('Main Menu', normal_font, ORANGE_RED, _screen, SCREEN_WIDTH // 2, 120)
+        draw_text('Main Menu', pygame.font.SysFont('Lato', 30, True), ORANGE_RED, _screen, SCREEN_WIDTH // 2, 120)
 
         underline_font = pygame.font.SysFont('Lato', 15)
         underline_font.set_underline(True)
@@ -31,18 +31,16 @@ def run_main():
 
         mouse_pos = pygame.mouse.get_pos()
         # TODO: add calls here
-        a_star_btn = normal_button((125, 180), (100, 30), _screen, 'A Star', mouse_pos)
-        bfs_btn = normal_button((125, 230), (100, 30), _screen, 'BFS', mouse_pos)
-        insertion_btn = normal_button((325, 180), (120, 30), _screen, 'Insertion Sort', mouse_pos)
-        bubble_btn = normal_button((325, 230), (120, 30), _screen, 'Bubble Sort', mouse_pos)
+        a_star_btn = normal_button((125, 180), (100, 35), _screen, 'A Star', mouse_pos)
+        bfs_btn = normal_button((125, 230), (100, 35), _screen, 'BFS', mouse_pos)
+        insertion_btn = normal_button((325, 180), (120, 35), _screen, 'Insertion Sort', mouse_pos)
+        bubble_btn = normal_button((325, 230), (120, 35), _screen, 'Bubble Sort', mouse_pos)
         #help_btn = normal_button((SCREEN_WIDTH - 120, SCREEN_WIDTH - 30), (100, 30), _screen, 'Help', mouse_pos, color=BLUE)
         if _click:
             set_click_listener(a_star_btn, mouse_pos, lambda: astar.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(bfs_btn, mouse_pos, lambda: bfs.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(insertion_btn, mouse_pos, lambda: insertion_sort.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(bubble_btn, mouse_pos, lambda: bubble_sort.run_visualization(_screen, SCREEN_WIDTH))
-            set_click_listener(git_hub, mouse_pos, lambda: webbrowser.open('https://github.com/Umair-Syed/Algorithms'
-                                                                           '-Visualization.git', new=2))
             
 
         _click = False
