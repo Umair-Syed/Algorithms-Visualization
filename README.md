@@ -11,7 +11,7 @@ Visualizing different algorithms using Pygame.
 </ol>
 
 <h3>Screen Shots</h3>
-<img src="/screenshots/sc1.jpg" height="60%" width="60%" >
+<img src="/screenshots/sc.jpg" height="60%" width="60%" >
 <img src="/screenshots/gif1.gif" height="60%" width="60%" >
 <img src="/screenshots/gif2.gif" height="60%" width="60%" >
 
