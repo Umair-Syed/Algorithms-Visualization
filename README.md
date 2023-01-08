@@ -1,6 +1,14 @@
 # Algorithms-Visualization
 Visualizing different algorithms using Pygame.
 
+<h3>Install:</h3>
+1. Install pygame:
+
+```pip install pygame```
+
+2. Run in the folder
+
+```python main.py```
 
 
 <h3>Features:</h3>
