@@ -41,6 +41,8 @@ def run_main():
             set_click_listener(bfs_btn, mouse_pos, lambda: bfs.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(insertion_btn, mouse_pos, lambda: insertion_sort.run_visualization(_screen, SCREEN_WIDTH))
             set_click_listener(bubble_btn, mouse_pos, lambda: bubble_sort.run_visualization(_screen, SCREEN_WIDTH))
+            set_click_listener(git_hub, mouse_pos, lambda: webbrowser.open('https://github.com/Umair-Syed/Algorithms'
+                                                                           '-Visualization.git', new=2))
             
 
         _click = False
